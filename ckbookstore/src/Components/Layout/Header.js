@@ -26,11 +26,6 @@ class Header extends Component {
                 Home <span className="sr-only">(current)</span>
               </a>
             </li>
-            <li className="nav-item active">
-              <a className="nav-link" href="/dashbard">
-                Dashboard
-              </a>
-            </li>
             {this.props.auth === true ? (
               <li className="nav-item active">
                 <a className="nav-link" href="/book/add">
@@ -48,6 +43,9 @@ class Header extends Component {
               <li className="nav-item active mr-3">
                 <a className="btn btn-success btn-block mb-2 " href="/cart">
                   Cart
+                </a>
+                <a className="btn btn-success btn-block mb-2 " href="/profile">
+                  Profile
                 </a>
               </li>
             ) : (

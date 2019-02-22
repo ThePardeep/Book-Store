@@ -63,7 +63,15 @@ export default class AddBook extends Component {
         Authorization: Token
       };
       Axios.post("/api/book/add", Book).then(res => {
-        window.location = "/";
+        console.log(res)
+        if(!res.data.error) {
+          window.location = "/";
+        } else {
+          this.setState({
+            error : true,
+            msg : res.data.msg
+          })
+        }
       });
     }
   }

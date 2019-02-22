@@ -59,7 +59,7 @@ app.get("/api", (req, res) => {
 // @ACCESS : PUBLIC
 
 app.get("/api/books", (req, res) => {
-  BookSchema.find({ Buyed: false }).then(books => {
+  BookSchema.find({ Sold: false }).then(books => {
     if (books) {
       res.status(200).json({
         Books: books,
@@ -92,7 +92,7 @@ app.use("/api/cart", CartRoute);
 
 //PRODUCTION Setup
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === "production") {  
   // SET STATIC FOLDER
   app.use(express.static("ckbookstore/build"));
 

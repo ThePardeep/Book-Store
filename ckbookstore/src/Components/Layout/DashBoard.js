@@ -6,7 +6,6 @@ export default class DashBoard extends Component {
 
   
   render() {
-    //console.log(this.props.data)
     return (
       <div>
         <div className="row">
@@ -17,6 +16,7 @@ export default class DashBoard extends Component {
             {this.props.data.status !== 200 ? (
               <Books
                 Books={this.props.data.Books}
+                FetchBooks={this.props.FetchBooks}
                 IsAuth={this.props.data.IsAuth}
               />
             ) : (

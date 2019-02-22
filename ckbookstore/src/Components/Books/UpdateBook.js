@@ -18,7 +18,7 @@ export default class UpdateBook extends Component {
     this.UpdateBook = this.UpdateBook.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const ID = window.location.pathname.split("/")[3];
     const Token = localStorage.getItem("token");
       Axios.defaults.headers = {

@@ -23,6 +23,7 @@ class App extends Component {
     };
     this.Login = this.Login.bind(this);
     this.Logout = this.Logout.bind(this);
+    this.FetchBooks = this.FetchBooks.bind(this);
   }
 
   Login() {
@@ -49,29 +50,29 @@ class App extends Component {
 
   componentWillMount() {
     this.Login();
+    this.FetchBooks();
+  }
+
+  FetchBooks() {
     axios.get("/api/books").then(res => {
-      // console.log(res)
+       console.log(res)
       this.setState({
         Books: res.data.Books,
         Status: res.data.status
       });
     });
   }
-
   render() {
-    // DB.collection("Book").get().then((data) =>{
-    //   console.log(data.docs);
-    // })
     return (
       <BrowserRouter>
         <div>
-          <Header auth={this.state.IsAuth} Logout={this.Logout}/>
+          <Header auth={this.state.IsAuth} Logout={this.Logout} />
           <div className="container">
             <Switch>
               <Route
                 exact
                 path="/"
-                render={() => <DashBoard data={this.state} />}
+                render={() => <DashBoard data={this.state} FetchBooks={this.FetchBooks} />}
               />
               <Route
                 exact={true}
@@ -131,7 +132,12 @@ class App extends Component {
                 path="/profile"
                 render={() => {
                   if (this.state.IsAuth) {
-                    return <Profile IsAuth={this.state.IsAuth} Logout={this.Logout} />;
+                    return (
+                      <Profile
+                        IsAuth={this.state.IsAuth}
+                        Logout={this.Logout}
+                      />
+                    );
                   } else {
                     return <Redirect to="/login" />;
                   }

@@ -14,7 +14,7 @@ const Book = new Schema({
     type: String,
     required: true
   },
-  Buyed : {
+  Sold : {
     type : Boolean,
     required : true,
     default : false

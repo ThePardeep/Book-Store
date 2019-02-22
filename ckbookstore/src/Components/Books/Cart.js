@@ -138,6 +138,11 @@ export default class Cart extends Component {
                         <h2>{this.state.Total} INR </h2>
                       </div>
                     </div>
+                    <div className="row">
+                     <div className="col">
+                       <button className=" mt-4 btn btn-block btn-primary">Buy Now</button>
+                     </div>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -29,7 +29,14 @@ class Books extends Component {
         this.setState({
           msg: "SuccessFully Deleted"
         });
-        window.location = "/";
+        this.props.FetchBooks();
+        if(this.state.msg !=='') {
+          setInterval(()=>{
+            this.setState({
+              msg : ""
+            })
+          },4000);
+        }
       })
       .catch(err => {
         console.log(err);
