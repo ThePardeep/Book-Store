@@ -39,6 +39,15 @@ class Header extends Component {
                 </a>
               </li>
             )}
+            {
+              this.props.auth === true ? (
+                <li className="nav-item active mr-3">
+                <a className="btn btn-success btn-block mb-3 " href="/profile">
+                 Profile
+                </a>
+              </li>
+              ) : ('')
+            }
             {this.props.auth === true ? (
               <li className="nav-item active mr-3">
                 <a className="btn btn-success btn-block mb-2 " href="/cart">
@@ -54,22 +63,13 @@ class Header extends Component {
             )}
             {this.props.auth === true ? (
               <li  className="nav-item active">
-                <button className="btn btn-danger btn-block " onClick={this.props.Logout}>
+                <button className="btn btn-danger btn-block mb-3" onClick={this.props.Logout}>
                   LogOut
                 </button>
               </li>
             ) : (
               ""
             )}
-            {
-              this.props.auth === true ? (
-                <li className="nav-item active mr-3">
-                <a className="btn btn-success btn-block mb-2 " href="/cart">
-                  Cart
-                </a>
-              </li>
-              ) : ('')
-            }
           </ul>
         </div>
       </nav>

@@ -10,6 +10,7 @@ export default class Cart extends Component {
       isLoading: true,
       CartItem: "",
       Total: 0,
+      msg: "",
       error: false
     };
     this.FindTotal = this.FindTotal.bind(this);
@@ -68,26 +69,56 @@ export default class Cart extends Component {
         Authorization: Token
       };
       Axios.post("/api/cart/remove", {
-        id : Id
-      }).then(res => {
-        if(res.data.Cart.length < 0) {
-          return;
-        }
-       if(!res.data.error ) {
-         this.setState({
-           isLoading : true
-         })
-        this.FetchCartItem();
-        return;
-       }
-       this.setState({
-        isLoading: false,
-        error: res.data.error
-      });
-      }) 
-      .catch(err => {
-        throw err;
+        id: Id
       })
+        .then(res => {
+          if (res.data.Cart.length < 0) {
+            return;
+          }
+          if (!res.data.error) {
+            this.setState({
+              isLoading: true
+            });
+            this.FetchCartItem();
+            return;
+          }
+          this.setState({
+            isLoading: false,
+            error: res.data.error
+          });
+        })
+        .catch(err => {
+          throw err;
+        });
+    }
+  }
+  ProcedeCart() {
+    const Cart = this.state.CartItem;
+    if (Cart.length > 0) {
+      var Token = localStorage.getItem("token");
+      Axios.defaults.headers = {
+        Authorization: Token
+      };
+      Axios.post("/api/cart/buy", {
+        Cart: Cart
+      })
+        .then(res => {
+          if (!res.data.error) {
+            window.location = "/profile";
+            return;
+          }
+          this.setState({
+            error: true,
+            msg: "Some Error"
+          });
+        })
+        .catch(err => {
+          throw err;
+        });
+    } else {
+      this.setState({
+        msg: "Cart  Is Empty"
+      });
     }
   }
   render() {
@@ -97,6 +128,11 @@ export default class Cart extends Component {
           <h1>Cart </h1>
           <hr style={{ border: "2px solid black" }} />
           <div className="cart">
+            {this.state.msg === "" ? (
+              ""
+            ) : (
+              <p className="alert alert-danger">{this.state.msg}</p>
+            )}
             {this.state.isLoading === true ? (
               <div className="align-middle">
                 <HashLoader sizeUnit={"px"} size={80} color={"#7eff"} />
@@ -139,9 +175,15 @@ export default class Cart extends Component {
                       </div>
                     </div>
                     <div className="row">
-                     <div className="col">
-                       <button className=" mt-4 btn btn-block btn-primary">Buy Now</button>
-                     </div>
+                      <div className="col">
+                        <hr />
+                        <button
+                          onClick={this.ProcedeCart.bind(this)}
+                          className=" mt-4 btn btn-block btn-primary"
+                        >
+                          Buy Now
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

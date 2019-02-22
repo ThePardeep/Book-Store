@@ -9,13 +9,63 @@ class Profile extends Component {
       Profile: "",
       error: false,
       msg: "",
-      isLoading: true
+      isLoading: true,
+      BookLoading: true,
+      Books: ""
     };
     this.getProfile = this.getProfile.bind(this);
+    this.getUserBooks = this.getUserBooks.bind(this);
+    this.RemoveBook = this.RemoveBook.bind(this);
   }
 
   componentDidMount() {
     this.getProfile();
+    this.getUserBooks();
+  }
+
+  RemoveBook(e) {
+    e.preventDefault();
+    if (this.props.IsAuth) {
+      const Token = localStorage.getItem("token");
+      Axios.defaults.headers = {
+        Authorization: Token
+      };
+      Axios.post("/api/user/book/remove", {
+        id: e.target.id.value
+      })
+        .then(res => {
+          if (!res.data.error) {
+            this.setState({
+              BookLoading: true
+            });
+            this.getUserBooks();
+          }
+        })
+        .catch(err => {
+          throw err;
+        });
+    }
+  }
+  getUserBooks() {
+    if (this.props.IsAuth) {
+      const Token = localStorage.getItem("token");
+      Axios.defaults.headers = {
+        Authorization: Token
+      };
+      Axios.get("/api/user/books")
+        .then(res => {
+          if (!res.data.error) {
+            this.setState({
+              error: res.data.error,
+              Books: res.data.Books,
+              BookLoading: false
+            });
+          }
+        })
+        .catch(err => {
+          throw err;
+        });
+    }
   }
 
   getProfile() {
@@ -26,7 +76,6 @@ class Profile extends Component {
       };
       Axios.get("/api/user/profile")
         .then(res => {
-          console.log(res);
           if (res.data.error) {
             window.location = "/login";
           } else {
@@ -64,12 +113,39 @@ class Profile extends Component {
               </a>
             </div>
             <div className="card-body">
-              <div className="sold-books">
-                <div>
-                  <h1>Your Books </h1>
-                  <hr style={{ border: "2px solid black" }} />
-                </div>
+              <div>
+                <h1>Your Books </h1>
+                <hr style={{ border: "2px solid black" }} />
               </div>
+              {this.state.BookLoading === true ? (
+                <BarLoader sizeUnit={"px"} size={80} />
+              ) : (
+                <div className="user-books">
+                  {this.state.Books.map(book => (
+                    <div
+                      key={book._id}
+                      className="card book-card"
+                      style={{ width: "15rem" }}
+                    >
+                      <div className="card-body">
+                        <h4>{book.bookTitle}</h4>
+                        <hr style={{ border: "2px solid black" }} />
+                        <h5>BookDesc : {book.bookDesc}</h5>
+                        <h5>BookPrice : {book.bookPrice}</h5>
+                        <form onSubmit={this.RemoveBook}>
+                          <input type="hidden" name="id" value={book._id} />
+                          <button
+                            type="submit"
+                            className="btn btn-block btn-danger"
+                          >
+                            Remove
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}

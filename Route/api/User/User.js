@@ -4,6 +4,8 @@ const bcrypt = require("bcrypt");
 const JsonWt = require("jsonwebtoken");
 const Keys = require("../../../Config/Keys.js");
 const passport = require("passport");
+const ObjectId = require("mongoose").Types.ObjectId;
+const BookSchema = require("../../../Schema/Book");
 // User Schema
 
 const UserSchema = require("../../../Schema/User.js");
@@ -110,15 +112,117 @@ Router.get(
   (req, res) => {
     if (req.user) {
       const UserData = {
-        Name : req.user.Name,
-        email : req.user.Email,
-        id : req.user._id
-      }
+        Name: req.user.Name,
+        email: req.user.Email,
+        id: req.user._id
+      };
       res.status(200).json({
         user: UserData,
         error: false
       });
     }
+  }
+);
+
+// @ROUTE-NAME : /api/user/books
+// @ROUTE-TYPE : GET
+// @ROUTE-DESC : Fetch User Books
+// @ACCESS : PRIVATE
+
+Router.get(
+  "/books",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const UserID = req.user._id;
+    UserSchema.findById(UserID)
+      .select("BuyedBooks")
+      .then(BuyedBooks => {
+        if (BuyedBooks) {
+          const BookIds = [],
+            CartArray = BuyedBooks.BuyedBooks;
+          CartArray.forEach(ele => {
+            BookIds.push(ObjectId(`${ele.BookId}`));
+          });
+          BookSchema.find({
+            _id: { $in: BookIds }
+          })
+            .then(Books => {
+              if (Books) {
+                res.status(200).json({
+                  Books: Books,
+                  error: false
+                });
+              }
+            })
+            .catch(err => {
+              throw err;
+            });
+        }
+      })
+      .catch(err => {
+        throw err;
+      });
+  }
+);
+
+// @ROUTE-NAME : /api/user/book/remove
+// @ROUTE-TYPE : POST
+// @ROUTE-DESC : Remove Book From User Book
+// @ACCESS : PRIVATE
+
+Router.post(
+  "/book/remove",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const UserID = req.user._id;
+    UserSchema.findById(UserID)
+      .select("BuyedBooks")
+      .then(BuyedBooks => {
+        const BookId = req.body.id;
+        var I = false,
+          BuyedBooksId;
+        if (BuyedBooks) {
+          BuyedBooks.BuyedBooks.map(data => {
+            if (data.BookId == BookId) {
+              I = true;
+              BuyedBooksId = data._id;
+              return;
+            }
+          });
+        }
+        if (I) {
+          BuyedBooks.BuyedBooks.pull({ _id: BuyedBooksId });
+          BuyedBooks.save().then(BuyedBooks => {
+            if (BuyedBooks) {
+              // Chnage Book Sold Status
+              BookSchema.findById(BookId)
+              .then(Book =>{
+                if(Book) {
+                  Book.Sold = false;
+                  Book.save();
+                  res.status(200).json({
+                    Book: Book,
+                    error: false
+                  });
+                }
+              }) 
+              return;
+            }
+            res.json({
+              error: true,
+              msg: "Book Not Found"
+            });
+          });
+        } else {
+          res.json({
+            error: true,
+            msg: "Book Not Found"
+          });
+        }
+      })
+      .catch(err => {
+        throw err;
+      });
   }
 );
 

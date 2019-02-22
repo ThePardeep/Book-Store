@@ -55,7 +55,6 @@ class App extends Component {
 
   FetchBooks() {
     axios.get("/api/books").then(res => {
-       console.log(res)
       this.setState({
         Books: res.data.Books,
         Status: res.data.status

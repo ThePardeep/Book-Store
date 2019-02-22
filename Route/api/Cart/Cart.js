@@ -21,10 +21,6 @@ Router.get(
       .select("Cart")
       .then(Cart => {
         if (Cart) {
-          //   res.status(200).json({
-          //     CartItem: Cart.Cart,
-          //     error: false
-          //   });
           const BookIds = [],
             CartArray = Cart.Cart;
           CartArray.forEach(ele => {
@@ -165,6 +161,58 @@ Router.post(
       .catch(err => {
         throw err;
       });
+  }
+);
+
+// @ROUTE-NAME : /api/cart/buy
+// @ROUTE-TYPE : POST
+// @ROUTE-DESC : PROCEDING CART ELEMENT
+// @ACCESS : PRIVATE
+
+Router.post(
+  "/buy",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    if (req.body.Cart) {
+      var BookIds = [],
+        CartArray = req.body.Cart;
+      CartArray.forEach(ele => {
+        BookIds.push(ObjectId(`${ele._id}`));
+      });
+      BookSchema.updateMany(
+        {
+          _id: { $in: BookIds }
+        },
+        { $set: { Sold: true } }
+      ).then(cart => {
+        const UserId = req.user._id;
+        UserSchema.findById(UserId)
+          .then(user => {
+            if (user) {
+              // PUSH Cart-Books To User Books
+              BookIds.forEach(Id => {
+                user.BuyedBooks.push({
+                  BookId: Id
+                });
+              });
+              //PULL BOOKS FROM CART
+              user.Cart = [];
+              //Save Books
+              user.save().then(user => {
+                if(user) {
+                  res.status(200).json({
+                    error : false,
+                    msg : "SuccessFully Buy"
+                  })
+                }
+              });
+            }
+          })
+          .catch(err => {
+            throw err;
+          });
+      });
+    }
   }
 );
 

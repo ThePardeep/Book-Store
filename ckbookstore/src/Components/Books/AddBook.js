@@ -63,7 +63,6 @@ export default class AddBook extends Component {
         Authorization: Token
       };
       Axios.post("/api/book/add", Book).then(res => {
-        console.log(res)
         if(!res.data.error) {
           window.location = "/";
         } else {
@@ -113,7 +112,7 @@ export default class AddBook extends Component {
             <label htmlFor="bookPrie">Book Price</label> <br />
             <input
               className="form-control"
-              type="text"
+              type="number"
               name="bookPrice"
               id="bookPrice"
               placeholder="Add Book Price"

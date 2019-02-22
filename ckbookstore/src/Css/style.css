@@ -33,3 +33,9 @@ body{
 .align-middle {
     text-align: center;
 }
+
+.book-card{
+    display: inline-block;
+    margin: 10px;
+    width : 18rem;
+}

@@ -141,7 +141,7 @@ export default class UpdateBook extends Component {
                 <label htmlFor="bookDesc">Book Desc</label> <br />
                 <input
                   className="form-control"
-                  type="text"
+                  type="number"
                   name="bookDesc"
                   id="bookDesc"
                   placeholder="Add Book Desc"
