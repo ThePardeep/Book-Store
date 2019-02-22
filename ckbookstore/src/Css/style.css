@@ -1,0 +1,35 @@
+footer{
+   background-color: #000;
+   height: 120px;
+}
+.footer-header {
+    text-align: center;
+    color: #fff;
+    margin-top: 30px;
+}
+
+.footer-end{
+    margin-top: 30px;
+    color: #000;
+    background-color: #fff;
+    padding: 0%;
+    border-bottom: 1px solid #000;
+    text-align: center;
+}
+
+.footer-end p {
+   vertical-align: middle;
+}
+
+body{
+    font-family: Nunito,serif;
+}
+
+.spiner{
+    padding: 80px;
+    margin-left: 150px;
+}
+
+.align-middle {
+    text-align: center;
+}

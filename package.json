@@ -1,0 +1,21 @@
+{
+  "name": "ckbookstore",
+  "version": "1.0.0",
+  "description": "buy books online",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix ckbookstore && npm run build --prefix ckbookstore"
+  },
+  "author": "pardeep saini",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^3.0.4",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.5.0",
+    "mongoose": "^5.4.12",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0"
+  }
+}
