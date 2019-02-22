@@ -44,9 +44,6 @@ class Header extends Component {
                 <a className="btn btn-success btn-block mb-2 " href="/cart">
                   Cart
                 </a>
-                <a className="btn btn-success btn-block mb-2 " href="/profile">
-                  Profile
-                </a>
               </li>
             ) : (
               <li className="nav-item active">
@@ -64,6 +61,15 @@ class Header extends Component {
             ) : (
               ""
             )}
+            {
+              this.props.auth === true ? (
+                <li className="nav-item active mr-3">
+                <a className="btn btn-success btn-block mb-2 " href="/cart">
+                  Cart
+                </a>
+              </li>
+              ) : ('')
+            }
           </ul>
         </div>
       </nav>
